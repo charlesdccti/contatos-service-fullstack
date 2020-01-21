@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.charles.model.Contato;
+import br.charles.model.ContatoCreate;
+import br.charles.model.ContatoUpdate;
 import br.charles.service.ContatoService;
+import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
 @CrossOrigin
@@ -30,36 +35,46 @@ public class ContatoController {
 	
 	@Autowired
 	private ContatoService contatoService;
+	private Contato contatoResult;
+	private Page<Contato> pageList;
 	
 	
 	
 	@GetMapping(value = "/{idContato}")
-	public Contato getContato(@PathVariable(required = true) Integer idContato) {
-		return contatoService.getContato(String.valueOf(idContato));
+	public ResponseEntity getContato(@PathVariable(required = true) Integer idContato) {
+		this.contatoResult = contatoService.getContato(String.valueOf(idContato));
+		return new ResponseEntity<>(this.contatoResult, HttpStatus.OK);
 	}
 	
 	
 	@PutMapping(value = "/{idContato}")
-	public Contato updateContato(@PathVariable(required = true) Integer idContato, @Valid @RequestBody Contato contato) {
-		return contatoService.updateContato(String.valueOf(idContato), contato);
+	public ResponseEntity updateContato(@PathVariable(required = true) Integer idContato, @Valid @RequestBody ContatoUpdate contato) {
+		this.contatoResult = contatoService.updateContato(String.valueOf(idContato), contato);
+		return new ResponseEntity<>(this.contatoResult, HttpStatus.NO_CONTENT);
 	}
 
-	
 	@DeleteMapping(value = "/{idContato}")
-	public Contato deleteContato(@PathVariable(required = true) Integer idContato) {
-		return contatoService.deleteContato(String.valueOf(idContato));
+	@ApiOperation(value = "Apaga um objeto do tipo Contato")
+	public ResponseEntity deleteContato(@PathVariable(required = true) Integer idContato) {
+		
+		this.contatoResult	= contatoService.deleteContato(String.valueOf(idContato));
+		return new ResponseEntity<>("Contato removido com sucesso!", HttpStatus.NO_CONTENT);  // HttpStatus.NO_CONTENT impede de retornar a string
 	}
 	
 	
 	@PostMapping
-	public Contato createContato(@Valid @RequestBody Contato contato) {
-		return contatoService.createContato(contato);
+	public ResponseEntity createContato(@Valid @RequestBody ContatoCreate contato) {
+		this.contatoResult = contatoService.createContato(contato);
+		return new ResponseEntity<>(this.contatoResult, HttpStatus.CREATED);
 	}
 	
 	
 	@GetMapping(value = "/")
-	Page<Contato> contatosPageable(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page, @ApiIgnore @PageableDefault(page = 0, size = 10) Pageable pageable) {
-		return contatoService.listContatosByPage(pageable);
+	public ResponseEntity contatosPageable(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page, 
+		@ApiIgnore @PageableDefault(page = 0, size = 10) Pageable pageable) {
+
+		this.pageList = contatoService.listContatosByPage(pageable);
+		return new ResponseEntity<>( pageList.getContent(), HttpStatus.OK);
 	}
 	
 	

@@ -6,11 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import br.charles.model.Contato;
+import br.charles.model.ContatoCreate;
+import br.charles.model.ContatoUpdate;
 
 public interface ContatoService {
 	
-	Contato createContato(Contato contato);
-	Contato updateContato(String id, Contato contato);
+	Contato createContato(ContatoCreate contato);
+	Contato updateContato(String id, ContatoUpdate contato);
 	Contato deleteContato(String id);
 	Contato getContato(String id);
 	List<Contato> listContatos();

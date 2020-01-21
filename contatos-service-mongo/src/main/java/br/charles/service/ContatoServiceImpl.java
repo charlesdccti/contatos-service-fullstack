@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import br.charles.exception.ContatoNotFoundException;
 import br.charles.model.Contato;
+import br.charles.model.ContatoCreate;
+import br.charles.model.ContatoUpdate;
 import br.charles.repository.ContatoRepository;
 
 
@@ -46,7 +48,13 @@ public class ContatoServiceImpl implements ContatoService {
 	}
 
 	@Override
-	public Contato createContato(Contato contato) {
+	public Contato createContato(ContatoCreate contatoDTO) {
+		Contato contato = new Contato();
+		contato.setNome(contatoDTO.getNome());
+		contato.setCanal(contatoDTO.getCanal());
+		contato.setValor(contatoDTO.getValor());
+		contato.setObs(contatoDTO.getObs());
+
 		return contatoRepository.save(contato);
 	}
 
@@ -57,7 +65,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 
 	@Override
-	public Contato updateContato(String id, Contato contatoDTO) {
+	public Contato updateContato(String id, ContatoUpdate contatoDTO) {
 		Contato updateInstance = this.findOne(id);
 		if(updateInstance != null){
 			updateInstance.setNome(contatoDTO.getNome());
