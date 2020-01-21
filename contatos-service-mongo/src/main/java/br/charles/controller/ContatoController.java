@@ -23,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/api")  // => http://localhost:8080/swagger-ui.html
 public class ContatoController {
 	
 	@Autowired
