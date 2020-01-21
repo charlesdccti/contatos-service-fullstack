@@ -2,6 +2,8 @@ package br.charles.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,25 +34,25 @@ public class ContatoController {
 	
 	
 	@GetMapping(value = "/{idContato}")
-	public Contato getContato(@PathVariable Integer idContato) {
+	public Contato getContato(@PathVariable(required = true) Integer idContato) {
 		return contatoService.getContato(String.valueOf(idContato));
 	}
 	
 	
 	@PutMapping(value = "/{idContato}")
-	public Contato updateContato(@PathVariable Integer idContato, @RequestBody Contato contato) {
+	public Contato updateContato(@PathVariable(required = true) Integer idContato, @Valid @RequestBody Contato contato) {
 		return contatoService.updateContato(String.valueOf(idContato), contato);
 	}
 
 	
 	@DeleteMapping(value = "/{idContato}")
-	public Contato deleteContato(@PathVariable Integer idContato) {
+	public Contato deleteContato(@PathVariable(required = true) Integer idContato) {
 		return contatoService.deleteContato(String.valueOf(idContato));
 	}
 	
 	
 	@PostMapping
-	public Contato createContato(@RequestBody Contato contato) {
+	public Contato createContato(@Valid @RequestBody Contato contato) {
 		return contatoService.createContato(contato);
 	}
 	
