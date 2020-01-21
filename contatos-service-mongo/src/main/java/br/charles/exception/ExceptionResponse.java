@@ -4,10 +4,10 @@ import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 
-import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 
-@Getter
+@Getter @ToString
 public class ExceptionResponse {
 	private Date timestamp;
 	private HttpStatus status;
@@ -47,5 +47,6 @@ public class ExceptionResponse {
 		return status;
 	}
 	
+
 
 }

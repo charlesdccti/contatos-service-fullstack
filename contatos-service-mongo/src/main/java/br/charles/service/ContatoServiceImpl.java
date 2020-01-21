@@ -22,6 +22,9 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Autowired
 	private ContatoRepository contatoRepository;
+	private List<Contato> contatoList;
+	private static Integer idMaior = 0;
+
 
 	@SuppressWarnings("finally")
 	private Contato findOne(String Id) {
@@ -49,7 +52,21 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public Contato createContato(ContatoCreate contatoDTO) {
+
+		this.contatoList = contatoRepository.findAll();
+
+
+		for (Contato contato : contatoList) {
+			Integer idcontato = Integer.parseInt(contato.getId());
+			if ( idcontato > idMaior) {
+				idMaior = idcontato;
+			}
+		}
+
+		idMaior++; 
+
 		Contato contato = new Contato();
+		contato.setId(String.valueOf(idMaior));	// Salvar o sucessor do "id de maior valor inteiro"
 		contato.setNome(contatoDTO.getNome());
 		contato.setCanal(contatoDTO.getCanal());
 		contato.setValor(contatoDTO.getValor());

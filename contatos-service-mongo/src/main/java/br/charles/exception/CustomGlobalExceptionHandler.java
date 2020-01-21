@@ -30,7 +30,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	public final ResponseEntity<Object> handleUserNotFoundException(ContatoNotFoundException ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(),HttpStatus.NOT_FOUND, ex.getMessage(),
 				request.getDescription(false));
-		return new ResponseEntity(""+exceptionResponse, HttpStatus.NOT_FOUND);
+		return new ResponseEntity(exceptionResponse.toString(), HttpStatus.NOT_FOUND);
 	}
 
 
@@ -76,7 +76,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 				request.getDescription(false));
-		return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity(exceptionResponse.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 
