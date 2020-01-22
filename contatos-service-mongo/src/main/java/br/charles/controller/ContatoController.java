@@ -30,7 +30,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/api")  // => http://localhost:8080/swagger-ui.html
+@RequestMapping(value = "/")  // => http://localhost:8080/swagger-ui.html
 public class ContatoController {
 	
 	@Autowired
@@ -41,6 +41,7 @@ public class ContatoController {
 	
 	
 	@GetMapping(value = "/{idContato}")
+	@ApiOperation(value = "Retorna um único objeto do tipo Contato")
 	public ResponseEntity getContato(@PathVariable(required = true) Integer idContato) {
 		this.contatoResult = contatoService.getContato(String.valueOf(idContato));
 		return new ResponseEntity<>(this.contatoResult, HttpStatus.OK);
@@ -48,6 +49,7 @@ public class ContatoController {
 	
 	
 	@PutMapping(value = "/{idContato}")
+	@ApiOperation(value = "Altera um objeto do tipo Contato")
 	public ResponseEntity updateContato(@PathVariable(required = true) Integer idContato, @Valid @RequestBody ContatoUpdate contato) {
 		this.contatoResult = contatoService.updateContato(String.valueOf(idContato), contato);
 		return new ResponseEntity<>(this.contatoResult, HttpStatus.NO_CONTENT);
@@ -62,7 +64,8 @@ public class ContatoController {
 	}
 	
 	
-	@PostMapping
+	@PostMapping("/")
+	@ApiOperation(value = "Cria um novo objeto do tipo Contato")
 	public ResponseEntity createContato(@Valid @RequestBody ContatoCreate contato) {
 		this.contatoResult = contatoService.createContato(contato);
 		return new ResponseEntity<>(this.contatoResult, HttpStatus.CREATED);
@@ -70,6 +73,7 @@ public class ContatoController {
 	
 	
 	@GetMapping(value = "/")
+	@ApiOperation(value = "Listar os Contatos")
 	public ResponseEntity contatosPageable(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page, 
 		@ApiIgnore @PageableDefault(page = 0, size = 10) Pageable pageable) {
 

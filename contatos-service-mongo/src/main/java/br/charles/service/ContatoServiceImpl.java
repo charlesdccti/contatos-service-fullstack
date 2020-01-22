@@ -112,6 +112,7 @@ public class ContatoServiceImpl implements ContatoService {
 	public Page<Contato> listContatosByPage(Pageable pageable) {
 		return contatoRepository.findAll(pageable);
 	}
+
 	
 
 }
