@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.charles.exception.ContatoNotFoundException;
@@ -82,14 +83,14 @@ public class ContatoServiceImpl implements ContatoService {
 
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public Contato getContato(String id) {
 		return this.findOne(id);
 	}
 
 	
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public Page<Contato> listContatosByPage(Pageable pageable) {
 		return contatoRepository.findAll(pageable);
 	}
