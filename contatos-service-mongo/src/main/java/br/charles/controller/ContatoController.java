@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,14 +26,14 @@ import br.charles.model.Contato;
 import br.charles.model.ContatoCreate;
 import br.charles.model.ContatoUpdate;
 import br.charles.service.ContatoService;
-import io.swagger.annotations.ApiOperation;
-import springfox.documentation.annotations.ApiIgnore;
+
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/")  // => http://localhost:8080/swagger-ui.html
+//@RequestMapping(value = "/api/")  // => http://localhost:8080/swagger-ui.html
 public class ContatoController {
 	
+	private static final Logger LOG = null;
 	@Autowired
 	private ContatoService contatoService;
 	private Contato contatoResult;
@@ -41,7 +42,6 @@ public class ContatoController {
 	
 	
 	@GetMapping(value = "/{idContato}")
-	@ApiOperation(value = "Retorna um único objeto do tipo Contato")
 	public ResponseEntity getContato(@PathVariable(required = true) Integer idContato) {
 		this.contatoResult = contatoService.getContato(String.valueOf(idContato));
 		return new ResponseEntity<>(this.contatoResult, HttpStatus.OK);
@@ -49,14 +49,12 @@ public class ContatoController {
 	
 	
 	@PutMapping(value = "/{idContato}")
-	@ApiOperation(value = "Altera um objeto do tipo Contato")
 	public ResponseEntity updateContato(@PathVariable(required = true) Integer idContato, @Valid @RequestBody ContatoUpdate contato) {
 		this.contatoResult = contatoService.updateContato(String.valueOf(idContato), contato);
 		return new ResponseEntity<>(this.contatoResult, HttpStatus.NO_CONTENT);
 	}
 
 	@DeleteMapping(value = "/{idContato}")
-	@ApiOperation(value = "Apaga um objeto do tipo Contato")
 	public ResponseEntity deleteContato(@PathVariable(required = true) Integer idContato) {
 		
 		this.contatoResult	= contatoService.deleteContato(String.valueOf(idContato));
@@ -65,7 +63,6 @@ public class ContatoController {
 	
 	
 	@PostMapping("/")
-	@ApiOperation(value = "Cria um novo objeto do tipo Contato")
 	public ResponseEntity createContato(@Valid @RequestBody ContatoCreate contato) {
 		this.contatoResult = contatoService.createContato(contato);
 		return new ResponseEntity<>(this.contatoResult, HttpStatus.CREATED);
@@ -73,12 +70,19 @@ public class ContatoController {
 	
 	
 	@GetMapping(value = "/")
-	@ApiOperation(value = "Listar os Contatos")
 	public ResponseEntity contatosPageable(@RequestParam(required = false) Integer size, @RequestParam(required = false) Integer page, 
-		@ApiIgnore @PageableDefault(page = 0, size = 10) Pageable pageable) {
+		 @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
 		this.pageList = contatoService.listContatosByPage(pageable);
+		
 		return new ResponseEntity<>( pageList.getContent(), HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value = "/all")
+	private ResponseEntity findAll() {
+
+		return new ResponseEntity<>(contatoService.listContatos() , HttpStatus.OK);
 	}
 	
 	

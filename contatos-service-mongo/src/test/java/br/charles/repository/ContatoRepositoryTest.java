@@ -59,7 +59,7 @@ class ContatoRepositoryTest {
 	}
 	
 	
-	@DisplayName("Test: Altera um objeto do tipo Contat")
+	@DisplayName("Test: Altera um objeto do tipo Contato")
 	@Test
 	public void update_Should_ChangeAndPersistData() {
 		this.contato = new Contato("1", "charles", "Email", "charlesdccti@gmail.com", "Desenvolvedor Java");
