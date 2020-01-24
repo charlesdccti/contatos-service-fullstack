@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.charles.exception.ContatoNotFoundException;
 import br.charles.model.Contato;
@@ -18,6 +19,7 @@ import br.charles.repository.ContatoRepository;
 
 
 @Service
+@Transactional
 public class ContatoServiceImpl implements ContatoService {
 
 	@Autowired
@@ -26,29 +28,7 @@ public class ContatoServiceImpl implements ContatoService {
 	private static Integer idMaior = 0;
 
 
-	@SuppressWarnings("finally")
-	private Contato findOne(String Id) {
-		Contato instance = null;
-		try {
-			List<Contato> contatoList = contatoRepository.findAll();
-			for (Contato contato : contatoList) {
-				if (contato.getId().equals(Id)) {
-					instance = contato;
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.getMessage();
-		} finally {
 
-			if(instance != null)
-				return instance;
-			else{
-				throw new ContatoNotFoundException("Contato não encontrado para o id = " + Id);
-				//throw new ContatoNotFoundException("Contato não existe no banco de dados!");
-			}
-		}
-	}
 
 	@Override
 	public Contato createContato(ContatoCreate contatoDTO) {
@@ -93,7 +73,6 @@ public class ContatoServiceImpl implements ContatoService {
 		return contatoRepository.save(updateInstance);
 	}
 
-
 	@Override
 	public Contato deleteContato(String id) {
 		Contato instance = findOne(id);
@@ -103,16 +82,43 @@ public class ContatoServiceImpl implements ContatoService {
 
 
 	@Override
+	@Transactional(readOnly = true)
 	public Contato getContato(String id) {
 		return this.findOne(id);
 	}
 
 	
 	@Override
+	@Transactional(readOnly = true)
 	public Page<Contato> listContatosByPage(Pageable pageable) {
 		return contatoRepository.findAll(pageable);
 	}
 
 	
+
+
+	@SuppressWarnings("finally")
+	private Contato findOne(String Id) {
+		Contato instance = null;
+		try {
+			List<Contato> contatoList = contatoRepository.findAll();
+			for (Contato contato : contatoList) {
+				if (contato.getId().equals(Id)) {
+					instance = contato;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.getMessage();
+		} finally {
+
+			if (instance != null)
+				return instance;
+			else {
+				throw new ContatoNotFoundException("Contato não encontrado para o id = " + Id);
+				// throw new ContatoNotFoundException("Contato não existe no banco de dados!");
+			}
+		}
+	}
 
 }
